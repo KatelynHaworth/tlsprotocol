@@ -1,9 +1,22 @@
-TLS Protocol Listener [![Build Status](https://travis-ci.org/LiamHaworth/tlsprotocol.svg)](https://travis-ci.org/LiamHaworth/tlsprotocol) [![GoDoc](https://godoc.org/github.com/LiamHaworth/tlsprotocol?status.svg)](https://godoc.org/github.com/LiamHaworth/tlsprotocol)
+TLS Protocol Listener [![Build Status](https://travis-ci.org/LiamHaworth/tlsprotocol.svg)](https://travis-ci.org/LiamHaworth/tlsprotocol) [![Tags](https://img.shields.io/github/tag/LiamHaworth/tlsprotocol.svg)](https://github.com/LiamHaworth/tlsprotocol/tags) [![GoDoc](https://godoc.org/github.com/LiamHaworth/tlsprotocol?status.svg)](https://godoc.org/github.com/LiamHaworth/tlsprotocol)
 =====================
 
 TLS Protocol Listener provides an abstraction on top of the TLS listener functionality to provide the ability to have
 individual net.Listeners for application layer protocols (ALPN) negotiated during the TLS handshake between the client
 and server.
+
+Installing
+==========
+
+```sh
+dep ensure -add github.com/LiamHaworth/tlsprotocol
+```
+
+or
+
+```sh
+go get github.com/LiamHaworth/tlsprotocol
+```
 
 Contributing
 =============

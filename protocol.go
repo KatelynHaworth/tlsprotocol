@@ -19,7 +19,7 @@ type Protocol struct {
 // is available in the Protocol's channel
 func (protocol *Protocol) Accept() (net.Conn, error) {
 	if conn, open := <-protocol.channel; !open {
-		return nil, fmt.Errorf("use of closed socket")
+		return nil, fmt.Errorf("accept %s %s: use of closed network connection", protocol.Addr().Network(), protocol.Addr().String())
 	} else {
 		return conn, nil
 	}

@@ -95,7 +95,7 @@ func (listener *Listener) Accept() (net.Conn, error) {
 	select {
 	case conn, ok := <-listener.defaultChannel:
 		if !ok {
-			return nil, fmt.Errorf("use of closed socket")
+			return nil, fmt.Errorf("accept %s %s: use of closed network connection", listener.addr.Network(), listener.addr.String())
 		}
 
 		return conn, nil
@@ -169,7 +169,6 @@ func (listener *Listener) Stop() {
 	listener.workers = nil
 	listener.channels = nil
 	listener.sockAddr = nil
-	listener.addr = nil
 }
 
 // protocolConfigured checks if the provided ALPN Protocol

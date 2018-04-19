@@ -2,6 +2,7 @@ package tlsprotocol
 
 import (
 	"crypto/tls"
+	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"net"
@@ -134,7 +135,6 @@ var _ = Describe("Listener", func() {
 	It("Should stop listening sockets and cleanup", func() {
 		listener.Stop()
 		Expect(listener.defaultChannel).To(BeClosed())
-		Expect(listener.addr).To(BeNil())
 		Expect(listener.sockAddr).To(BeNil())
 		Expect(len(listener.workers)).To(Equal(0))
 	})
@@ -143,13 +143,13 @@ var _ = Describe("Listener", func() {
 		conn, err := listener.Accept()
 
 		Expect(err).ToNot(BeNil())
-		Expect(err.Error()).To(Equal("use of closed socket"))
+		Expect(err.Error()).To(Equal(fmt.Sprintf("accept %s %s: use of closed network connection", listener.Addr().Network(), listener.Addr().String())))
 		Expect(conn).To(BeNil())
 
 		conn, err = h2Listener.Accept()
 
 		Expect(err).ToNot(BeNil())
-		Expect(err.Error()).To(Equal("use of closed socket"))
+		Expect(err.Error()).To(Equal(fmt.Sprintf("accept %s %s: use of closed network connection", h2Listener.Addr().Network(), h2Listener.Addr().String())))
 		Expect(conn).To(BeNil())
 	})
 })

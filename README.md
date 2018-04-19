@@ -1,4 +1,4 @@
-TLS Protocol Listener [![Build Status](https://travis-ci.org/LiamHaworth/tlsprotocol.svg)](https://travis-ci.org/LiamHaworth/tlsprotocol) [![Tags](https://img.shields.io/github/tag/LiamHaworth/tlsprotocol.svg)](https://github.com/LiamHaworth/tlsprotocol/tags) [![GoDoc](https://godoc.org/github.com/LiamHaworth/tlsprotocol?status.svg)](https://godoc.org/github.com/LiamHaworth/tlsprotocol)
+TLS Protocol Listener [![Build Status](https://travis-ci.org/LiamHaworth/tlsprotocol.svg)](https://travis-ci.org/LiamHaworth/tlsprotocol) [![Tags](https://img.shields.io/github/tag/LiamHaworth/tlsprotocol.svg)](https://github.com/LiamHaworth/tlsprotocol/tags) [![GoDoc](https://godoc.org/github.com/LiamHaworth/tlsprotocol?status.svg)](https://godoc.org/github.com/LiamHaworth/tlsprotocol) [![Go Report Card](https://goreportcard.com/badge/github.com/LiamHaworth/tlsprotocol)](https://goreportcard.com/report/github.com/LiamHaworth/tlsprotocol)
 =====================
 
 TLS Protocol Listener provides an abstraction on top of the TLS listener functionality to provide the ability to have

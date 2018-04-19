@@ -2,6 +2,7 @@ package tlsprotocol
 
 import (
 	"net"
+	"sync"
 )
 
 // worker is a standalone socket that
@@ -12,6 +13,7 @@ type worker struct {
 	parent  *Listener
 	running bool
 	socket  net.Listener
+	lock    sync.Mutex
 }
 
 // start sets the internal state of
@@ -19,12 +21,24 @@ type worker struct {
 // a go routine for receiving connections
 // from the configured socket
 func (worker *worker) start() {
-	if worker.running {
+	if worker.isRunning() {
 		return
 	}
 
+	worker.lock.Lock()
+	defer worker.lock.Unlock()
 	worker.running = true
+
 	go worker.listen()
+}
+
+// isRunning will return the value of
+// `running` of the worker but in a race
+// safe way
+func (worker *worker) isRunning() bool {
+	worker.lock.Lock()
+	defer worker.lock.Unlock()
+	return worker.running
 }
 
 // listen will receive connections from
@@ -32,7 +46,7 @@ func (worker *worker) start() {
 // until the internal state of the worker
 // is changed to no running
 func (worker *worker) listen() {
-	for worker.running {
+	for worker.isRunning() {
 		conn, err := worker.socket.Accept()
 		if err != nil {
 			worker.parent.errors <- err
@@ -47,6 +61,9 @@ func (worker *worker) listen() {
 // the worker to not running and closes
 // the configured socket
 func (worker *worker) stop() {
+	worker.lock.Lock()
+	defer worker.lock.Unlock()
+
 	worker.running = false
 	worker.socket.Close()
 }

@@ -6,6 +6,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"net"
+	"time"
 )
 
 var _ = Describe("Listener", func() {
@@ -100,6 +101,7 @@ var _ = Describe("Listener", func() {
 		Expect(len(listener.channels["h2"].channel)).To(Equal(0))
 
 		conn, err := tls.Dial("tcp", "127.0.0.1:6080", &tls.Config{InsecureSkipVerify: true})
+		time.Sleep(2 * time.Second)
 
 		Expect(err).To(BeNil())
 		Expect(conn).ToNot(BeNil())
@@ -107,6 +109,7 @@ var _ = Describe("Listener", func() {
 		Expect(len(listener.defaultChannel)).To(Equal(1))
 
 		conn, err = tls.Dial("tcp", "127.0.0.1:6080", &tls.Config{InsecureSkipVerify: true, NextProtos: []string{"h2"}})
+		time.Sleep(2 * time.Second)
 
 		Expect(err).To(BeNil())
 		Expect(conn).ToNot(BeNil())

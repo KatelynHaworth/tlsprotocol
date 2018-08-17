@@ -263,35 +263,30 @@ func (listener *Listener) buildSocket() (net.Listener, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to create socket in kernel: %s", err)
 	}
+	defer syscall.Close(fileDescriptor)
 
 	if err = syscall.SetsockoptInt(fileDescriptor, syscall.SOL_SOCKET, syscall.SO_REUSEADDR, 1); err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to set SO_REUSEADDR on socket: %s", err)
 	}
 
 	if err = syscall.SetsockoptInt(fileDescriptor, syscall.SOL_SOCKET, so_reuseport, 1); err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to set SO_REUSEPORT on socket: %s", err)
 	}
 
 	if err = syscall.SetNonblock(fileDescriptor, true); err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to set non-blocking on socket: %s", err)
 	}
 
 	if err = syscall.Bind(fileDescriptor, socketAddress); err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to bind socket to address: %s", err)
 	}
 
 	if err = syscall.Listen(fileDescriptor, syscall.SOMAXCONN); err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to start listening for socket: %s", err)
 	}
 
 	socket, err := net.FileListener(os.NewFile(uintptr(fileDescriptor), "tls-Protocol-listener"))
 	if err != nil {
-		syscall.Close(fileDescriptor)
 		return nil, fmt.Errorf("failed to convert file descriptor to listener: %s", err)
 	}
 

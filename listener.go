@@ -30,6 +30,13 @@ type Listener struct {
 	// not set it will default to 1
 	Listeners int
 
+	// BufferSize specifies the size of the connection
+	// buffer, the bigger the buffer the more connections
+	// that can be queued to be accepted.
+	//
+	// This will default to 1 if unset at Start().
+	BufferSize int
+
 	// workers stores the references to the underlying
 	// listen workers that listen for connections from
 	// their socket
@@ -65,8 +72,12 @@ func (listener *Listener) Start() error {
 		listener.Listeners = 1
 	}
 
+	if listener.BufferSize < 1 {
+		listener.BufferSize = 1
+	}
+
 	listener.workers = make([]*worker, listener.Listeners)
-	listener.defaultChannel = make(chan net.Conn, 1)
+	listener.defaultChannel = make(chan net.Conn, listener.BufferSize)
 	listener.errors = make(chan error, 1)
 
 	for i := range listener.workers {
@@ -124,10 +135,14 @@ func (listener *Listener) Protocol(proto string) (net.Listener, error) {
 		listener.channels = make(map[string]*Protocol, 0)
 	}
 
+	if listener.BufferSize < 1 {
+		listener.BufferSize = 1
+	}
+
 	listener.channels[proto] = &Protocol{
 		parent:  listener,
 		proto:   proto,
-		channel: make(chan net.Conn, 1),
+		channel: make(chan net.Conn, listener.BufferSize),
 	}
 
 	return listener.channels[proto], nil
